@@ -1,5 +1,6 @@
 import configparser
 # from datetime import timedelta
+from datetime import timedelta
 
 import pymysql
 
@@ -95,20 +96,30 @@ class DataBaseConnection(Singleton):
             print("return first time")
             return self.getStartTimeOfReception(commission_id=commission_id, date=preferred_date)
 
+        # print("////////////////////////////////")
+        # print(usedTimesTupleInTuple)
+        # print("////////////////////////////////")
+
         usedTimesSet = {i[0] for i in usedTimesTupleInTuple}
+
+        # print("////////////////////////////////")
+        # print(usedTimesSet)
+        # print("////////////////////////////////")
 
         startTime = self.getStartTimeOfReception(commission_id, date=preferred_date)
         endTime = self.getEndTimeOfReception(commission_id, date=preferred_date)
 
         reception_interval = self.getReceptionIntervalByFaculytId(faculty_id)
+        # reception_interval = timedelta(minutes=int(reception_interval))
 
         while startTime < endTime:
             if startTime not in usedTimesSet:
                 return startTime
             else:
                 startTime += reception_interval
+                # startTime += reception_interval
 
-        print("time overflow")
+        # print("time overflow")
         return None
 
 
@@ -157,7 +168,6 @@ class DataBaseConnection(Singleton):
         return self.cursor.lastrowid
 
     def updateAvailableForm(self, preferred_time, preferred_date, commission_faculty_id, student_id):
-
         sql = (f"update form\n"
                f"set\n"
                f" preferred_date = '{preferred_date}',\n"
@@ -165,15 +175,29 @@ class DataBaseConnection(Singleton):
                f"where student_id = '{student_id}' and commission_faculty_id = {commission_faculty_id};")
         self.cursor.execute(sql)
         self.connection.commit()
-        return self.cursor.lastrowid
+        return self.getFormId(commission_faculty_id, student_id)
+
+    def getFormId(self, commission_faculty_id, student_id):
+        sql = f"select id from form where student_id = '{student_id}' and commission_faculty_id = {commission_faculty_id};"
+        result = self.getResultOfQuery(sql)
+        return result
+
+    def getQueueTimeByFormId(self, form_id):
+        sql = f"select preferred_time from form where id = {form_id}"
+        result = self.getResultOfQuery(sql)
+        return result
 
     def createOrUpdateForm(self, preferred_time, preferred_date, commission_faculty_id, student_id):
         try:
-            self.createForm(preferred_time, preferred_date, commission_faculty_id, student_id)
+            id = self.createForm(preferred_time, preferred_date, commission_faculty_id, student_id)
+            return id
         except pymysql.err.IntegrityError as e:
             errorCode = e.args[0]
             if errorCode == self.DUPLICATE_ERROR_CODE:
-                self.updateAvailableForm(preferred_time, preferred_date, commission_faculty_id, student_id)
+                id = self.updateAvailableForm(preferred_time, preferred_date, commission_faculty_id, student_id)
+                return id
+            else:
+                raise e
 
 
 if __name__ == '__main__':
