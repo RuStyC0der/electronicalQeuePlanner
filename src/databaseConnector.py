@@ -1,3 +1,4 @@
+import configparser
 from datetime import timedelta
 
 import pymysql
@@ -9,9 +10,19 @@ from src.utils.Singleton import Singleton
 class DataBaseConnection(Singleton):
 
     DUPLICATE_ERROR_CODE = 1062
+    CONFIG_PATH = "./Config.ini"
 
     def __init__(self):
-        self.connection = pymysql.connect('localhost', 'unknown', 'miller', 'formData')
+
+        config = configparser.ConfigParser()
+        config.read(self.CONFIG_PATH)
+
+        host = config["Database"]["host"]
+        user = config["Database"]["user"]
+        password = config["Database"]["password"]
+        database = config["Database"]["database"]
+
+        self.connection = pymysql.connect(host, user, password, database,)
         self.cursor = self.connection.cursor()
 
 
