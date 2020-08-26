@@ -3,23 +3,16 @@ insert into schedule (start_time, end_time)
 values ('9:00:00', '16:00:00'),
  ('9:00:00', '14:00:00');
 
-insert into faculty (name, reception_interval_in_minutes)
-values('Економ', 15),
-('Юрфак', 15),
-('ФИПТ', 15),
-('Истфак', 15),
-('ФИЯ', 15),
-('ФХББ', 15),
-('Филфак', 15);
 
---insert into faculty (name, reception_interval_in_minutes)
---values('Економ', '00-15-00'),
---('Юрфак', '00-15-00'),
---('ФИПТ', '00-15-00'),
---('Истфак', '00-15-00'),
---('ФИЯ', '00-15-00'),
---('ФХББ', '00-15-00'),
---('Филфак', '00-15-00');
+
+insert into faculty (name, reception_interval_in_minutes)
+values('Економ', '00-15-00'),
+('Юрфак', '00-15-00'),
+('ФИПТ', '00-15-00'),
+('Истфак', '00-15-00'),
+('ФИЯ', '00-15-00'),
+('ФХББ', '00-15-00'),
+('Филфак', '00-15-00');
 
 
 insert into commission (name)
