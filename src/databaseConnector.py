@@ -1,5 +1,6 @@
 import configparser
 # from datetime import timedelta
+from datetime import timedelta
 
 import pymysql
 
@@ -184,8 +185,9 @@ class DataBaseConnection(Singleton):
 
     def getTimeAndDateByFormId(self, form_id):
         sql = f"select preferred_time, preferred_date from form where id = {form_id}"
-        result = self.getResultOfQuery(sql)
-        result = [str(i) for i in result]
+        self.dictCursor.execute(sql)
+        result = self.dictCursor.fetchone()
+        result = {i:str(result[i]) for i in result}
         return result
 
     def createOrUpdateForm(self, preferred_time, preferred_date, commission_faculty_id, student_id):
@@ -206,18 +208,18 @@ if __name__ == '__main__':
 
     dbm = DataBaseConnection()
 
-    print(dbm.checkIfDayIsWork('2020-08-26', 1))
-    print(dbm.checkIfDayIsWork('2020-08-30', 1))
-
-    print(dbm.getCommissionIdByName("Магистры"))
-    print(dbm.getFacultyIdByName("ФИПТ"))
-
-
-
-    print(dbm.getReceptionIntervalByFaculytId(1))
-    print(type(dbm.getReceptionIntervalByFaculytId(1)))
-    print(dbm.getOrCreateStudent("vasa", "por"))
-    print(dbm.getAvailableTime("2020-08-26", 1))
+    # print(dbm.checkIfDayIsWork('2020-08-26', 1))
+    # print(dbm.checkIfDayIsWork('2020-08-30', 1))
+    #
+    # print(dbm.getCommissionIdByName("Магистры"))
+    # print(dbm.getFacultyIdByName("ФИПТ"))
+    #
+    #
+    #
+    # print(dbm.getReceptionIntervalByFaculytId(1))
+    # print(type(dbm.getReceptionIntervalByFaculytId(1)))
+    # print(dbm.getOrCreateStudent("vasa", "por"))
+    # print(dbm.getAvailableTime("2020-08-26", 1))
     print(dbm.getTimeAndDateByFormId(1))
     # print(type(dbm.getAvailableTime("2020-08-26", 1)))
     # print(dbm.getLastRegisteredTime("2020-08-26", 10))
