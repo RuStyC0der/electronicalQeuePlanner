@@ -9,10 +9,10 @@ from src.queueManager import QueueAdd
 class HandleRequests(BaseHTTPRequestHandler):
 
     def __init__(self, request, client_address, server, *args, **kwargs):
-        super().__init__(request, client_address, server)
-
         dbm = DataBaseConnection()
         self.qm = QueueAdd(dbm)
+        super().__init__(request, client_address, server)
+
 
     def _set_headers(self):
         self.send_response(200)
