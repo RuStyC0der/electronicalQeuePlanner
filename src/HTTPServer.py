@@ -33,6 +33,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         # try:
         output = json.loads(body.decode('utf-8'))
         result = self.qm.tryToAddForm(output)
+        byte_result = json.dumps(result)
+        response.write(byte_result)
         print(output)
         print(result)
         # except:

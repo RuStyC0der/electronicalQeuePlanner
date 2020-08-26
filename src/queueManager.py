@@ -43,7 +43,7 @@ class QueueAdd(Singleton):
                 id = self.database.createOrUpdateForm(preferred_time, preferred_date, commission_faculty_id, student_id)
 
 
-                return self.database.getQueueTimeByFormId(id)
+                return self.database.getTimeAndDateByFormId(id)
         # except Exception as e:
         #     return e
 

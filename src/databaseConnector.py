@@ -1,6 +1,5 @@
 import configparser
 # from datetime import timedelta
-from datetime import timedelta
 
 import pymysql
 
@@ -25,6 +24,7 @@ class DataBaseConnection(Singleton):
 
         self.connection = pymysql.connect(host, user, password, database,)
         self.cursor = self.connection.cursor()
+        self.dictCursor = self.connection.cursor(pymysql.cursors.DictCursor)
 
 
     def getResultOfQuery(self, query, only_one=True):
@@ -182,9 +182,10 @@ class DataBaseConnection(Singleton):
         result = self.getResultOfQuery(sql)
         return result
 
-    def getQueueTimeByFormId(self, form_id):
-        sql = f"select preferred_time from form where id = {form_id}"
-        result = self.getResultOfQuery(sql)
+    def getTimeAndDateByFormId(self, form_id):
+        sql = f"select preferred_time, preferred_date from form where id = {form_id}"
+        self.dictCursor.execute(sql)
+        result = self.dictCursor.fetchone()
         return result
 
     def createOrUpdateForm(self, preferred_time, preferred_date, commission_faculty_id, student_id):
@@ -217,6 +218,7 @@ if __name__ == '__main__':
     print(type(dbm.getReceptionIntervalByFaculytId(1)))
     print(dbm.getOrCreateStudent("vasa", "por"))
     print(dbm.getAvailableTime("2020-08-26", 1))
+    print(dbm.getTimeAndDateByFormId(1))
     # print(type(dbm.getAvailableTime("2020-08-26", 1)))
     # print(dbm.getLastRegisteredTime("2020-08-26", 10))
     # # print(type(dbm.getAvailableTime("2020-08-26", 10)))
