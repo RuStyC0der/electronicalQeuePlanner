@@ -22,14 +22,14 @@ CREATE TABLE IF NOT EXISTS `custom_schedule` (
   `schedule_id` bigint UNSIGNED not null,
   `commission_id` bigint UNSIGNED not null,
   PRIMARY KEY (`id`),
-  unique (`date`),
+  unique (`date`, `commission_id`),
   foreign key (`schedule_id`)
     references `schedule` (`id`) on delete restrict on update cascade
 );
 
 CREATE TABLE IF NOT EXISTS `faculty` (
   `name` varchar(200) not null,
-  `reception_interval_in_minutes` varchar(150) not null,
+  `reception_interval_in_minutes` time not null,
   `id` serial,
   PRIMARY KEY (`id`),
   unique(`name`)
@@ -39,8 +39,7 @@ CREATE TABLE IF NOT EXISTS `commission` (
   `name` varchar(100) not null,
   `id` serial,
   PRIMARY KEY (`id`),
-  unique (`name`),
-
+  unique (`name`)
 );
 
 
@@ -58,16 +57,16 @@ CREATE TABLE IF NOT EXISTS `commission_faculty` (
 
 
 CREATE TABLE IF NOT EXISTS `form` (
-  `submit_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `preferred_time` date not null,
-  `preferred_date` time not null,
-  `commission_id` bigint UNSIGNED not null,
+  `submit_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `preferred_time` time not null,
+  `preferred_date` date not null,
+  `commission_faculty_id` bigint UNSIGNED not null,
   `student_id` bigint UNSIGNED not null,
   `id` serial,
-  unique(`student_id`, `commission_id`),
+  unique(`student_id`, `commission_faculty_id`),
   PRIMARY KEY (`id`),
-  foreign key (`commission_id`)
-    references `commission` (`id`) on delete restrict on update cascade,
+  foreign key (`commission_faculty_id`)
+    references `commission_faculty` (`id`) on delete restrict on update cascade,
   foreign key (`student_id`)
     references `student` (`id`) on delete restrict on update cascade
 );
