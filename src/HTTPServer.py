@@ -2,8 +2,18 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer  # python3
 from io import BytesIO
 
+from src.databaseConnector import DataBaseConnection
+from src.queueManager import QueueAdd
+
 
 class HandleRequests(BaseHTTPRequestHandler):
+
+    def __init__(self, request, client_address, server, *args, **kwargs):
+        super().__init__(request, client_address, server)
+
+        dbm = DataBaseConnection()
+        self.qm = QueueAdd(dbm)
+
     def _set_headers(self):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
@@ -19,20 +29,27 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.send_response(200)
         self.end_headers()
         response = BytesIO()
-        output = json.loads(body.decode('utf-8'))
 
-        # result = tryToAddForm(output)
+        try:
+            output = json.loads(body.decode('utf-8'))
+            result = self.qm.tryToAddForm(output)
+            print(output)
+            print(result)
+        except:
+            print("bad json")
+            response.write(b'bad json')
 
-
-        response.write(body)
+        # response.write(body)
         self.wfile.write(response.getvalue())
-        print(output)
 
     # def do_PUT(self):
     #     self.do_POST()
 
 
-host = ''
-port = 8080
-HTTPServer((host, port), HandleRequests).serve_forever()
+
+if __name__ == '__main__':
+    host = ''
+    port = 8080
+
+    HTTPServer((host, port), HandleRequests).serve_forever()
 
