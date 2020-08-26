@@ -21,7 +21,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
     def do_GET(self):
         self._set_headers()
-        self.wfile.write("received get request")
+        self.wfile.write(b"received get request")
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
@@ -30,14 +30,14 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.end_headers()
         response = BytesIO()
 
-        try:
-            output = json.loads(body.decode('utf-8'))
-            result = self.qm.tryToAddForm(output)
-            print(output)
-            print(result)
-        except:
-            print("bad json")
-            response.write(b'bad json')
+        # try:
+        output = json.loads(body.decode('utf-8'))
+        result = self.qm.tryToAddForm(output)
+        print(output)
+        print(result)
+        # except:
+        #     print("bad json")
+        #     response.write(b'bad json')
 
         # response.write(body)
         self.wfile.write(response.getvalue())
