@@ -95,10 +95,6 @@ class DataBaseConnection(Singleton):
             print("return first time")
             return self.getStartTimeOfReception(commission_id=commission_id, date=preferred_date)
 
-        print("////////////////////////////////")
-        print(usedTimesTupleInTuple)
-        print("////////////////////////////////")
-
         usedTimesSet = {i[0] for i in usedTimesTupleInTuple}
 
         startTime = self.getStartTimeOfReception(commission_id, date=preferred_date)
