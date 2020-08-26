@@ -184,8 +184,8 @@ class DataBaseConnection(Singleton):
 
     def getTimeAndDateByFormId(self, form_id):
         sql = f"select preferred_time, preferred_date from form where id = {form_id}"
-        self.dictCursor.execute(sql)
-        result = self.dictCursor.fetchone()
+        result = self.getResultOfQuery(sql)
+        result = [str(i) for i in result]
         return result
 
     def createOrUpdateForm(self, preferred_time, preferred_date, commission_faculty_id, student_id):
