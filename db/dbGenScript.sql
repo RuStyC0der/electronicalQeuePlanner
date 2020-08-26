@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `student` (
   `id` serial,
   PRIMARY KEY (`id`),
   unique (`email`)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `schedule` (
   `start_time` time not null,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `id` SERIAL,
   PRIMARY KEY (`id`),
   unique (`start_time`, `end_time`)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE IF NOT EXISTS `custom_schedule` (
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `custom_schedule` (
   unique (`date`, `commission_id`),
   foreign key (`schedule_id`)
     references `schedule` (`id`) on delete restrict on update cascade
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `faculty` (
   `name` varchar(200) not null,
@@ -33,14 +33,14 @@ CREATE TABLE IF NOT EXISTS `faculty` (
   `id` serial,
   PRIMARY KEY (`id`),
   unique(`name`)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `commission` (
   `name` varchar(100) not null,
   `id` serial,
   PRIMARY KEY (`id`),
   unique (`name`)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE IF NOT EXISTS `commission_faculty` (
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `commission_faculty` (
     references `faculty` (`id`) on delete restrict on update cascade,
   foreign key (`commission_id`)
     references `commission` (`id`) on delete restrict on update cascade
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE IF NOT EXISTS `form` (
@@ -69,6 +69,6 @@ CREATE TABLE IF NOT EXISTS `form` (
     references `commission_faculty` (`id`) on delete restrict on update cascade,
   foreign key (`student_id`)
     references `student` (`id`) on delete restrict on update cascade
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
