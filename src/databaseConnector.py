@@ -30,7 +30,7 @@ class DataBaseConnection(Singleton):
         # print(query)
         conutOfQery = self.cursor.execute(query)
 
-        if (conutOfQery == 1):
+        if (conutOfQery == 1 and only_one):
             return self.cursor.fetchone()[0]
         elif (conutOfQery == 0):
             # print("False on: " + query)
@@ -98,6 +98,7 @@ class DataBaseConnection(Singleton):
         print("////////////////////////////////")
         print(usedTimesTupleInTuple)
         print("////////////////////////////////")
+
         usedTimesSet = {i[0] for i in usedTimesTupleInTuple}
 
         startTime = self.getStartTimeOfReception(commission_id, date=preferred_date)
