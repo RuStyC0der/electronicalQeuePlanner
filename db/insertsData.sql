@@ -1,5 +1,5 @@
 
-insert into schedule (start_time, end_time)
+insert into schedule (start_time, end_time, id)
 values
 ('9:00:00', '16:00:00', 1),
 ('9:00:00', '14:00:00', 2);
