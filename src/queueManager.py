@@ -43,7 +43,7 @@ class QueueAdd(Singleton):
                 self.database.createOrUpdateForm(preferred_time, preferred_date, commission_faculty_id, student_id)
 
         except Exception as e:
-            return "unknown error"
+            return e
 
 
 if __name__ == '__main__':
