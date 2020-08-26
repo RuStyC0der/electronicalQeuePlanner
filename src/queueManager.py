@@ -9,7 +9,7 @@ class QueueAdd(Singleton):
 
     def tryToAddForm(self, formJSON):
 
-        try:
+        # try:
 
             preferable_date = formJSON["Preferable_date"]
 
@@ -42,8 +42,8 @@ class QueueAdd(Singleton):
 
                 self.database.createOrUpdateForm(preferred_time, preferred_date, commission_faculty_id, student_id)
 
-        except Exception as e:
-            return e
+        # except Exception as e:
+        #     return e
 
 
 if __name__ == '__main__':

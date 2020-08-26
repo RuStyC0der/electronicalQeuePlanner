@@ -1,5 +1,5 @@
 import configparser
-from datetime import timedelta
+# from datetime import timedelta
 
 import pymysql
 
@@ -99,8 +99,8 @@ class DataBaseConnection(Singleton):
 
         startTime = self.getStartTimeOfReception(commission_id, date=preferred_date)
         endTime = self.getEndTimeOfReception(commission_id, date=preferred_date)
-        reception_interval_in_minutes_int = int(self.getReceptionIntervalByFaculytId(faculty_id))
-        reception_interval = timedelta(minutes=reception_interval_in_minutes_int)
+
+        reception_interval = self.getReceptionIntervalByFaculytId(faculty_id)
 
         while startTime < endTime:
             if startTime not in usedTimesSet:
