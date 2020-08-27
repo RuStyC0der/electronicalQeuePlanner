@@ -30,18 +30,18 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.end_headers()
         response = BytesIO()
 
-        # try:
-        output = json.loads(body.decode('utf-8'))
-        result = self.qm.tryToAddForm(output)
-        byte_result = json.dumps(result)
-        response.write(byte_result)
-        print(output)
-        print(result)
-        # except:
-        #     print("bad json")
-        #     response.write(b'bad json')
+        try:
+            output = json.loads(body.decode('utf-8'))
+            result = self.qm.tryToAddForm(output)
+            byte_result = json.dumps(result)
+            response.write(byte_result.encode())
+            print(output)
+            print(result)
+        except Exception as e:
+            errorJSON = {"error": str(e)}
+            byte_result = json.dumps(errorJSON)
+            response.write(byte_result.encode())
 
-        # response.write(body)
         self.wfile.write(response.getvalue())
 
     # def do_PUT(self):

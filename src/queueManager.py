@@ -9,7 +9,7 @@ class QueueAdd(Singleton):
 
     def tryToAddForm(self, formJSON):
 
-        # try:
+        try:
 
             preferable_date = formJSON["Preferable_date"]
 
@@ -17,7 +17,7 @@ class QueueAdd(Singleton):
                 commission_id = self.database.getCommissionIdByName(formJSON["Comission"])
                 faculty_id = self.database.getFacultyIdByName(formJSON["Faculty"])
             except Exception as e:
-                return "data error"
+                return {"error": str(e)}
 
             student_name = formJSON["Responder_FIO"]
             email = formJSON["E-mail"]
@@ -26,13 +26,13 @@ class QueueAdd(Singleton):
             commission_faculty_id = self.database.getCommissionFacutyIdByCommissionAndFacultyId(commission_id=commission_id, faculty_id=faculty_id)
 
             if not self.database.checkIfDayIsWork(date=preferable_date, commission_id=commission_id):
-                return "day is not work"
+                return {"error": "day is not work"}
 
             preferred_time = self.database.getAvailableTime(preferred_date=preferable_date, commission_faculty_id=commission_faculty_id)
             print("Preferred time: ", preferred_time)
 
             if not preferred_time:
-                return "time is not available"
+                return {"error":"time is not available"}
             else:
 
                 preferred_date = preferable_date
@@ -44,8 +44,9 @@ class QueueAdd(Singleton):
 
 
                 return self.database.getTimeAndDateByFormId(id)
-        # except Exception as e:
-        #     return e
+
+        except Exception as e:
+            return {"error": str(e)}
 
 
 if __name__ == '__main__':
