@@ -1,6 +1,4 @@
 import configparser
-# from datetime import timedelta
-from datetime import timedelta
 
 import pymysql
 
@@ -54,8 +52,6 @@ class DataBaseConnection(Singleton):
         return self.getResultOfQuery(
             f"select id from custom_schedule where date = '{date}' and commission_id = {commission_id};")
 
-    def checkIfHasTime(self, day, time):
-        raise NotImplemented
 
     def getCommissionIdByName(self, name):
         result = self.getResultOfQuery(f"select id from commission where name = '{name}'")
@@ -80,15 +76,13 @@ class DataBaseConnection(Singleton):
         result = self.getResultOfQuery(sql)
         return result
 
-    def getUsedTimes(self, preferred_date, commission_faculty_id):
-
+    def getBusyTimes(self, preferred_date, commission_faculty_id):
         sql = f"SELECT preferred_time from form where commission_faculty_id = {commission_faculty_id} and preferred_date = '{preferred_date}'"
         result = self.getResultOfQuery(sql, only_one=False)
         return result
 
     def getAvailableTime(self, preferred_date, commission_faculty_id):
-        # TODO may be this not working!!!
-        usedTimesTupleInTuple = self.getUsedTimes(preferred_date, commission_faculty_id)
+        usedTimesTupleInTuple = self.getBusyTimes(preferred_date, commission_faculty_id)
 
         commission_id = self.getCommissionIdByCommissionFacutyId(commission_faculty_id)
         faculty_id = self.getFacultyIdByCommissionFacultyId(commission_faculty_id)
@@ -97,15 +91,8 @@ class DataBaseConnection(Singleton):
             print("return first time")
             return self.getStartTimeOfReception(commission_id=commission_id, date=preferred_date)
 
-        # print("////////////////////////////////")
-        # print(usedTimesTupleInTuple)
-        # print("////////////////////////////////")
 
         usedTimesSet = {i[0] for i in usedTimesTupleInTuple}
-
-        # print("////////////////////////////////")
-        # print(usedTimesSet)
-        # print("////////////////////////////////")
 
         startTime = self.getStartTimeOfReception(commission_id, date=preferred_date)
         endTime = self.getEndTimeOfReception(commission_id, date=preferred_date)
@@ -118,9 +105,7 @@ class DataBaseConnection(Singleton):
                 return startTime
             else:
                 startTime += reception_interval
-                # startTime += reception_interval
 
-        # print("time overflow")
         return None
 
 
@@ -208,20 +193,20 @@ if __name__ == '__main__':
 
     dbm = DataBaseConnection()
 
-    # print(dbm.checkIfDayIsWork('2020-08-26', 1))
-    # print(dbm.checkIfDayIsWork('2020-08-30', 1))
-    #
-    # print(dbm.getCommissionIdByName("Магистры"))
-    # print(dbm.getFacultyIdByName("ФИПТ"))
-    #
-    #
-    #
-    # print(dbm.getReceptionIntervalByFaculytId(1))
-    # print(type(dbm.getReceptionIntervalByFaculytId(1)))
-    # print(dbm.getOrCreateStudent("vasa", "por"))
-    # print(dbm.getAvailableTime("2020-08-26", 1))
+    print(dbm.checkIfDayIsWork('2020-08-26', 1))
+    print(dbm.checkIfDayIsWork('2020-08-30', 1))
+
+    print(dbm.getCommissionIdByName("Магистры"))
+    print(dbm.getFacultyIdByName("ФИПТ"))
+
+
+
+    print(dbm.getReceptionIntervalByFaculytId(1))
+    print(type(dbm.getReceptionIntervalByFaculytId(1)))
+    print(dbm.getOrCreateStudent("vasa", "por"))
+    print(dbm.getAvailableTime("2020-08-26", 1))
     print(dbm.getTimeAndDateByFormId(1))
-    # print(type(dbm.getAvailableTime("2020-08-26", 1)))
-    # print(dbm.getLastRegisteredTime("2020-08-26", 10))
-    # # print(type(dbm.getAvailableTime("2020-08-26", 10)))
+    print(type(dbm.getAvailableTime("2020-08-26", 1)))
+
+    print(type(dbm.getAvailableTime("2020-08-26", 10)))
     print("////////////////////////////////")
